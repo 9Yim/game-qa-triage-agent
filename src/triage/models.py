@@ -51,7 +51,7 @@ class BugReport(BaseModel):
 
     attempted_solutions: list[str] = Field(
         default_factory=list,
-        description="Fixes the player states they have already tried, one per item. Empty list if none are mentioned.",
+        description="Fixes the player says they have already tried, one per item. Empty list if none are mentioned.",
     )
 
     frequency: Literal["always", "often", "rare", "once", "unknown"] = Field(
@@ -60,7 +60,11 @@ class BugReport(BaseModel):
 
     evidence: list[Evidence] = Field(
         default_factory=list,
-        description="One entry for each non-empty field above. Fields left empty need no evidence.",
+        # keep the exclusion list in sync when adding fields to this model
+        description=(
+            "Provide one entry per non-empty field, except title, evidence "
+            "and extraction_confidence."
+        ),
     )
 
     extraction_confidence: float = Field(
