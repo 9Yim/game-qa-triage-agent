@@ -40,11 +40,11 @@ data-protection reasons. A rewritten, publishable sample set will be added.
 Work in progress.
 
 - [x] Typed data model (Pydantic)
-- [x] First extraction run against a real report
-- [ ] Extraction module with retry and response caching
-- [ ] Evidence check
+- [x] Extraction module and batch runner over the whole sample set
+- [ ] Evidence check (with text normalisation)
 - [ ] Completeness check
 - [ ] Duplicate detection
+- [ ] Retry on API errors
 - [ ] Evaluation harness and metrics
 
 ## Setup
@@ -61,8 +61,10 @@ python scripts/check_key.py
 
 ```
 src/triage/models.py     typed records: ReportSource, Evidence, BugReport
+src/triage/llm.py        talks to the Anthropic API, returns unvalidated fields
+src/triage/extract.py    loads a report, validates the model's answer
 scripts/check_key.py     one-off: verify the API key in .env works
-scripts/record_one.py    one-off: extract one real report, save the raw response
+scripts/run_all.py       extract every report, print a summary, save to runs/
 data/raw_real/           real posts, local only, git-ignored
 runs/                    recorded model responses, local only, git-ignored
 ```
