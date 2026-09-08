@@ -1,0 +1,20 @@
+# Real scraped reports: local development only, never published
+data/raw_real/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+
+# LLM response cache
+.cache/
+
+# Editor / OS
+.idea/
+.DS_Store
+
+# Recorded LLM runs (contain raw scraped text)
+runs/
