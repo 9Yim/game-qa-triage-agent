@@ -28,6 +28,10 @@ Severity rating and team assignment are deliberately out of scope.
    quote a real sentence and still draw the wrong conclusion from it - for
    example when a player states a guess about the cause and the model records it
    as an observation.
+4. Some fields are inferred rather than copied - `frequency` maps "keeps
+   crashing" onto a fixed scale, and `expected_result` is often something the
+   player never wrote down. No verbatim quote can support them, so they are
+   outside what the evidence check can verify at all.
 
 ## Data
 

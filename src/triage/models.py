@@ -1,10 +1,12 @@
-"""表单
+"""The three records this project passes around.
 
-三张表：
-  ReportSource —— 一条反馈的来源信息
-  Evidence     —— AI 填某一格时给出的原文依据
-  BugReport    —— AI 从留言里提取出来的事实
+    ReportSource - where a report came from; filled by me
+    Evidence     - the sentence the model used to justify one extracted field
+    BugReport    - the facts the model extracted
 
+What reaches the model: field names, types, Field(description=...) and each
+CLASS docstring - all of them end up in the JSON schema sent with the request.
+`#` comments do not. Changing any of the former changes the prompt.
 """
 
 from typing import Literal, Optional
@@ -13,7 +15,7 @@ from pydantic import BaseModel, Field
 
 
 class ReportSource(BaseModel):
-    #Source from, bug platform can be deduced
+    """Platform is inferred from the source, no llm involved"""
 
     source_id: str
     platform: Literal["PC_Steam", "PS5", "Xbox", "Switch", "Mobile"] = "PC_Steam"
@@ -21,7 +23,10 @@ class ReportSource(BaseModel):
 
 
 class Evidence(BaseModel):
-    # Quote evidence, by what AI conduct
+    """The sentence the model used to justify one extracted field."""
+
+    # `field` stays a plain str on purpose: a wrong field name should not fail
+    # the whole record. checks.py normalises names when comparing instead.
 
     field: str = Field(description="Name of the field this evidence supports, e.g. actual_result.")
 
@@ -31,7 +36,7 @@ class Evidence(BaseModel):
 
 
 class BugReport(BaseModel):
-    """从玩家的一段原始留言里抽取出来的事实。由 AI 填写。"""
+    """Facts extracted from a single player bug report."""
 
     title: str = Field(description="One-sentence summary of the problem, at most 15 words.")
 
@@ -60,10 +65,15 @@ class BugReport(BaseModel):
 
     evidence: list[Evidence] = Field(
         default_factory=list,
-        # keep the exclusion list in sync when adding fields to this model
+        # Only fields that can be quoted word-for-word are listed here.
+        # frequency and expected_result are inferred rather than copied
+
+        # Keep this list in sync when adding fields to this model.
         description=(
-            "Provide one entry per non-empty field, except title, evidence "
-            "and extraction_confidence."
+            "Provide evidence for these fields when they are not empty: "
+            "build_version, repro_steps, actual_result, attempted_solutions. "
+            "One entry covering the whole list is enough for repro_steps. "
+            "Do not provide evidence for any other field."
         ),
     )
 
