@@ -37,7 +37,8 @@ Severity rating and team assignment are deliberately out of scope.
 
 Development uses real posts from a public Steam bug-report board. Those are kept
 locally and excluded from the repository (see `.gitignore`) for copyright and
-data-protection reasons. A rewritten, publishable sample set will be added.
+data-protection reasons, so the scripts need your own reports in
+`data/raw_real/` to produce anything.
 
 ## Status
 
@@ -54,8 +55,7 @@ Work in progress.
 ## Setup
 
 ```bash
-
-pip install anthropic python-dotenv pydantic
+pip install -r requirements.txt
 
 cp .env.example .env      # then put your Anthropic API key in .env
 python scripts/check_key.py
